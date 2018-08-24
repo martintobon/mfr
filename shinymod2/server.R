@@ -8,6 +8,13 @@
 #
 
 library(shiny)
+library(DMwR2)
+library(ggplot2)
+library(xts)
+library(quantmod)
+
+
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
