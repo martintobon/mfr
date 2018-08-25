@@ -7,13 +7,14 @@
 #    http://shiny.rstudio.com/
 #
 
+#add library
 library(shiny)
 library(DMwR2)
 library(ggplot2)
 library(xts)
 library(quantmod)
 
-
+#test
 
 
 # Define server logic required to draw a histogram
