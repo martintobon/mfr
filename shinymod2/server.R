@@ -7,7 +7,11 @@
 #    http://shiny.rstudio.com/
 #
 
+#For ANN!
+#add library
+
 #required libraries
+
 library(shiny)
 library(DMwR2)
 library(ggplot2)
@@ -15,7 +19,11 @@ library(xts)
 library(quantmod)
 
 
-ddddd
+#add a new line
+
+
+#Hello Team!!!! 
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
