@@ -20,7 +20,6 @@ library(xts)
 library(quantmod)
 
 
-
 #add a new line
 
 
