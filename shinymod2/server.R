@@ -20,12 +20,15 @@ library(xts)
 library(quantmod)
 
 
+<<<<<<< HEAD
+=======
 #add a new line
 
 
 #Hello Team!!!! 
 
 
+>>>>>>> 9f95baaba145e233bd49fa80eea39d2b7c8bbea1
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
