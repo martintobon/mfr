@@ -14,8 +14,7 @@ library(ggplot2)
 library(xts)
 library(quantmod)
 
-
-ddddd
+#Hello Team!!!! 
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
