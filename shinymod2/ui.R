@@ -18,26 +18,31 @@ shinyUI(fluidPage(
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
+    headerPanel("Click the button"),
     sidebarPanel(
+      
+      
+      
       #This is a slider from the original template, we will delete this //MT
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30),
+      # sliderInput("bins",
+                  # "Number of bins:",
+                  # min = 1,
+                  # max = 50,
+                  # value = 30),
        
        #This is a dropdown to select the stock //MT
        selectInput("stockInput", 
                    "Pick your stock:", 
                    c("AMZN","FB","GOOG","NVDA","AAPL"),
-                   "AMZN"),selected = "GOOG",
+                   "AMZN"), selected = "GOOG"),
        
        #This is a dropdown to select the model //MT
-       selectInput("modelInput", 
-                   "Pick your prediction model:", 
-                   c("Linear Regression","Random Forest","Naive Bayes"),
-                   "Linear Regression")
+       #selectInput("modelInput", 
+                  # "Pick your prediction model:", 
+                  # c("Linear Regression","Random Forest","Naive Bayes"),
+                  # "Linear Regression"),
        
+    actionButton("goButton", "Go!")
     ),
     
     # Show a plot of the generated distribution
