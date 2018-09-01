@@ -27,13 +27,13 @@ shinyUI(fluidPage(
                    value = 30),
        
        #This is a dropdown to select the stock //MT
-       selectInput("stock", 
+       selectInput("stockInput", 
                    "Pick your stock:", 
                    c("AMZN","FB","GOOG","NVDA","AAPL"),
-                   "AMZN"),
+                   "AMZN"),selected = "GOOG",
        
        #This is a dropdown to select the model //MT
-       selectInput("model", 
+       selectInput("modelInput", 
                    "Pick your prediction model:", 
                    c("Linear Regression","Random Forest","Naive Bayes"),
                    "Linear Regression")
