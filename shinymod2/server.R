@@ -12,10 +12,6 @@ shinyServer(function(input, output) {
    
   output$distPlot <- renderPlot({
     
-    #only run when button is clicked
-    if (input$goButton == 0)
-      return()
-    
     # generate bins based on input$bins from ui.R
     #x    <- faithful[, 2] 
     #bins <- seq(min(x), max(x), length.out = input$bins + 1)

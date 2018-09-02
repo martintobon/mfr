@@ -34,7 +34,7 @@ shinyUI(fluidPage(
        selectInput("stockInput", 
                    "Pick your stock:", 
                    c("AMZN","FB","GOOG","NVDA","AAPL"),
-                   "AMZN"), selected = "GOOG"),
+                   "AMZN"),selected = "GOOG"),
        
        #This is a dropdown to select the model //MT
        #selectInput("modelInput", 
@@ -42,7 +42,7 @@ shinyUI(fluidPage(
                   # c("Linear Regression","Random Forest","Naive Bayes"),
                   # "Linear Regression"),
        
-    actionButton("goButton", "Go!")
+    actionButton("goButton", "Go!"),
     ),
     
     # Show a plot of the generated distribution
@@ -50,4 +50,4 @@ shinyUI(fluidPage(
        plotOutput("distPlot")
     )
   )
-))
+)
