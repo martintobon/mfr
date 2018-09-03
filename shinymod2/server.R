@@ -21,7 +21,6 @@ shinyServer(function(input, output) {
     
     #get stock prices
     price <- getSymbols('input$stockInput',from='2017-01-01')
-    #close <- price$input$stockInput.Close
     plot(price)
     
   })
