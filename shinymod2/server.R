@@ -19,6 +19,7 @@ shinyServer(function(input, output) {
     output$plot <- renderPlot({    
       chartSeries(dataInput(), theme = chartTheme("white"),
                   type = "line")
+      
     })
     
   })
