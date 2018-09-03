@@ -40,9 +40,6 @@ shinyServer(function(input, output) {
       model1<-auto.arima(stock_df$Close, ic="bic")
       forecast1<-forecast(model1, h=5)
       
-      # draw the line graph
-      plot(forecast1)
-      
       if (input$modelInput=="ARIMA Non-seasonal"){
         return(plot(forecast1))
       } else {

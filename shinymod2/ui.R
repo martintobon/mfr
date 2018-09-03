@@ -3,7 +3,7 @@ library(shiny)
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Stock Guru"),
+  titlePanel("Stock Guru - Scroll down if you don't see model"),
   
   sidebarLayout(
     sidebarPanel(
