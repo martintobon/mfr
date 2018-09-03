@@ -14,7 +14,6 @@ shinyServer(function(input, output) {
     dataInput <- reactive({
       getSymbols(input$stockInput, src = "yahoo",
                  from='2018-01-01', 
-                 to='2018-08-30',
                  auto.assign = FALSE)
     })
     

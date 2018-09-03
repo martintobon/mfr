@@ -13,7 +13,7 @@ shinyUI(fluidPage(
       
       selectInput("stockInput", 
                   "Pick your stock:", 
-                  c("AMZN","FB","GOOGL","NVDA","AAPL"),"AMZN"),
+                  c("AMZN","FB","GOOG","NVDA","AAPL"),"AMZN"),
       
       #This is a dropdown to select the model
       
