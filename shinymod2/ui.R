@@ -4,7 +4,7 @@ library(shiny)
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("Stock Guru"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
@@ -14,15 +14,11 @@ shinyUI(fluidPage(
        selectInput("stockInput", 
                    "Pick your stock:", 
                    c("AMZN","FB","GOOG","NVDA","AAPL"),
-                   "AMZN"),selected = "GOOG")
-       
-
-       
-    ),
+                   "AMZN"),selected = "GOOG"),
     
     # Show a plot of the generated distribution
     mainPanel(
        plotOutput("distPlot")
     )
   )
-)
+))
