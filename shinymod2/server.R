@@ -1,16 +1,25 @@
 
 
-library(shiny)
+
 library(quantmod)
 
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
-  output$distPlot <- renderPlot({
+  output$plot <- renderPlot({
     
-    price <- getSymbols('input$stockInput',from='2017-01-01')
-    plot(price)
+    dataInput <- reactive({
+      getSymbols(input$stockInput, src = "yahoo",
+                 from='2017-01-01', 
+                 to='2017-04-30',
+                 auto.assign = FALSE)
+    })
+    
+    output$plot <- renderPlot({    
+      chartSeries(dataInput(), theme = chartTheme("white"),
+                  type = "line")
+    })
     
   })
   
