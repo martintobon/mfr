@@ -19,14 +19,15 @@ shinyUI(fluidPage(
       
       selectInput("modelInput", 
                   "Pick your prediction model:", 
-                  c("ARIMA Non-seasonal","ARIMA Seasonal","Exponential Smoothing (ETS)"),"ARIMA Non-seasonal")
+                  c("ARIMA Non-seasonal","ARIMA Seasonal","Exponential Smoothing (ETS)", "Seasonal Naive"),"ARIMA Non-seasonal")
       
     ),
     mainPanel(
        plotOutput("plot"),
        plotOutput("autoarima"),
        plotOutput("arimaseasonal"),
-       plotOutput("ets")
+       plotOutput("ets"),
+       plotOutput("seasonalnaive")
     )
   )
 ))

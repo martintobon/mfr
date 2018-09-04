@@ -108,7 +108,32 @@ shinyServer(function(input, output) {
       
     })
     
-    
+      #seasonal naive
+      output$seasonalnaive<-renderPlot({
+       
+      # retrieve stock data
+      stock<-as.character(input$stockInput)
+      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2018-01-01'))
+      stock_df$Open=stock_df[,1]
+      stock_df$High=stock_df[,2]
+      stock_df$Low=stock_df[,3]
+      stock_df$Close=stock_df[,4]
+      stock_df$Volume=stock_df[,5]
+      stock_df$Adj=stock_df[,6]
+      stock_df<-stock_df[,c(7,8,9,10,11,12)]
+      
+      #Random Walk model
+      model4<-snaive(stock_df$Close, h=5)
+      forecast4<-forecast(model4, h=5)
+      
+      if (input$modelInput=="Seasonal Naive"){
+        return(plot(forecast4))
+      } else {
+        return(NULL)
+      }
+      
+      
+    })
     
   })
   
