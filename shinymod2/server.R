@@ -4,6 +4,7 @@ library(ggplot2)
 library(xts)
 library(quantmod)
 library(forecast)
+library(fpp2)
 
 
 # Define server logic required to draw a histogram
@@ -37,7 +38,10 @@ shinyServer(function(input, output) {
       stock_df$Adj=stock_df[,6]
       stock_df<-stock_df[,c(7,8,9,10,11,12)]
       
-      model1<-auto.arima(stock_df$Close, ic="bic")
+      train_stock_df <- subset.data.frame(stock_df$Close, end=length(stock_df$Close)-101)
+      test_stock_df <- subset.data.frame(stock_df$Close, start=length(stock_df$Close)-100)
+      
+      model1<- auto.arima(train_stock_df$Close, ic="bic")
       forecast1<-forecast(model1, h=5)
       
       if (input$modelInput=="ARIMA Non-seasonal"){
