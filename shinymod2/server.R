@@ -4,8 +4,6 @@ library(ggplot2)
 library(xts)
 library(quantmod)
 library(forecast)
-library(fpp2)
-
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -14,7 +12,7 @@ shinyServer(function(input, output) {
     
     dataInput <- reactive({
       getSymbols(input$stockInput, src = "yahoo",
-                 from='2018-01-01', 
+                 from='2010-01-01', 
                  auto.assign = FALSE)
     })
     
@@ -25,11 +23,10 @@ shinyServer(function(input, output) {
     
     output$autoarima <- renderPlot({
       
-      
-      
+    
       # retrieve stock data and produce ARIMA non-seasonal model estimate
       stock<-as.character(input$stockInput)
-      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2018-01-01'))
+      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2010-01-01'))
       stock_df$Open=stock_df[,1]
       stock_df$High=stock_df[,2]
       stock_df$Low=stock_df[,3]
@@ -38,20 +35,36 @@ shinyServer(function(input, output) {
       stock_df$Adj=stock_df[,6]
       stock_df<-stock_df[,c(7,8,9,10,11,12)]
       
-      train_stock_df <- subset.data.frame(stock_df$Close, end=length(stock_df$Close)-101)
-      test_stock_df <- subset.data.frame(stock_df$Close, start=length(stock_df$Close)-100)
+      stockxts <- as.xts(stock_df)
       
-      model1<- auto.arima(train_stock_df$Close, ic="bic")
-      forecast1<-forecast(model1, h=5)
+      train_stock <- stockxts["/2018-05-31"]
+      test_stock <- stockxts["2018-06-01/"]
+      
+      model1<- auto.arima(train_stock$Close, ic="bic")
+      model1b <- Arima(test_stock$Close, model=model1)
+      forecast1<-forecast(model1b, h=5)
       
       if (input$modelInput=="ARIMA Non-seasonal"){
-        return(plot(forecast1))
+        return(plot(forecast1, main = "ARIMA Non-seasonal (next 5 days)",  xlab = "Date", ylab = "Price"))
       } else {
         return(NULL)
       }
       
+      # Arima table
+      m1 <- accuracy(model1)
+      m1b <- accuracy(model1b)
+      m1 <- as.data.frame(m1)
+      m1b <- as.data.frame(m1b)
+      m1 <- rbind(m1, m1b)
       
+      output$autoarima <- renderTable({
       
+        if (input$forecast == "ARIMA Non-seasonal") {
+          return(t(m1))
+        } else {
+          return(NULL)
+        }
+      })  
     })
     
     #ARIMA Seasonal
@@ -59,7 +72,7 @@ shinyServer(function(input, output) {
       
       # retrieve stock data
       stock<-as.character(input$stockInput)
-      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2018-01-01'))
+      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2010-01-01'))
       stock_df$Open=stock_df[,1]
       stock_df$High=stock_df[,2]
       stock_df$Low=stock_df[,3]
@@ -74,23 +87,47 @@ shinyServer(function(input, output) {
       decomp<-stl(station, s.window="periodic")
       adjusted<-seasadj(decomp)
       
+      stockxts <- as.xts(stock_df)
+      train_stock <- stockxts["/2018-05-31"]
+      test_stock <- stockxts["2018-06-01/"]
+      
       #Fit ARIMA seasonal model
-      model2<-auto.arima(adjusted, seasonal=TRUE)
-      forecast2<-forecast(model2, h=5)
+
+      model2<- auto.arima(train_stock$Close, ic="bic", seasonal=TRUE)
+      model2b <- Arima(test_stock$Close, model=model2, seasonal=TRUE)
+      forecast2<-forecast(model2b, h=5)
       
       if (input$modelInput=="ARIMA Seasonal"){
-        return(plot(forecast2))
+        return(plot(forecast2, main = "ARIMA Seasonal (next 5 days)",  xlab = "Date", ylab = "Price"))
       } else {
         return(NULL)
       }
     })
+
+    # Arima non-seasonal table
+    m2 <- accuracy(model2)
+    m2b <- accuracy(model2b)
+    m2 <- as.data.frame(m2)
+    m2b <- as.data.frame(m2b)
+    m2 <- rbind(m2, m2b)
+    
+    output$autoarima <- renderTable({
+      
+      if (input$forecast == "ARIMA Seasonal") {
+        return(t(m1))
+      } else {
+        return(NULL)
+      }
+    })  
+  })
+  
     
     #Exponential Smoothing
     output$ets<-renderPlot({
       
       # retrieve stock data
       stock<-as.character(input$stockInput)
-      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2018-01-01'))
+      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2010-01-01'))
       stock_df$Open=stock_df[,1]
       stock_df$High=stock_df[,2]
       stock_df$Low=stock_df[,3]
@@ -98,48 +135,40 @@ shinyServer(function(input, output) {
       stock_df$Volume=stock_df[,5]
       stock_df$Adj=stock_df[,6]
       stock_df<-stock_df[,c(7,8,9,10,11,12)]
+
+      stockxts <- as.xts(stock_df)
       
+      train_stock <- as.data.frame(stockxts["/2018-05-31"])
+      test_stock <- as.data.frame(stockxts["2018-06-01/"])
+            
       #Fit Exponential Smoothing model
-      model3<-ets(stock_df$Close)
-      forecast3<-forecast(model3, h=5)
+      model3<- ets(train_stock$Close)
+      model3b <- ets(test_stock$Close, model=model3)
+      forecast3<-forecast(model3b, h=5)
       
       if (input$modelInput=="Exponential Smoothing (ETS)"){
-        return(plot(forecast3))
+        return(plot(forecast3, main = "Exponential Smoothing Forecast (Next 5 Days)",  xlab = "Date", ylab = "Price"))
       } else {
         return(NULL)
       }
+  
       
+      # ETS table
+      m3 <- accuracy(model3)
+      m3b <- accuracy(model3b)
+      m3 <- as.data.frame(m3)
+      m3b <- as.data.frame(m3b)
+      m3 <- rbind(m3, m3b)
+      
+      output$autoarima <- renderTable({
+        
+        if (input$forecast == "Exponential Smoothing (ETS)") {
+          return(t(m1))
+        } else {
+          return(NULL)
+        }
+      })  
+    })    
       
     })
     
-      #seasonal naive
-      output$seasonalnaive<-renderPlot({
-       
-      # retrieve stock data
-      stock<-as.character(input$stockInput)
-      stock_df<-as.data.frame(getSymbols((Symbols=stock), auto.assign=FALSE, from='2018-01-01'))
-      stock_df$Open=stock_df[,1]
-      stock_df$High=stock_df[,2]
-      stock_df$Low=stock_df[,3]
-      stock_df$Close=stock_df[,4]
-      stock_df$Volume=stock_df[,5]
-      stock_df$Adj=stock_df[,6]
-      stock_df<-stock_df[,c(7,8,9,10,11,12)]
-      
-      #Random Walk model
-      model4<-snaive(stock_df$Close, h=5)
-      forecast4<-forecast(model4, h=5)
-      
-      if (input$modelInput=="Seasonal Naive"){
-        return(plot(forecast4))
-      } else {
-        return(NULL)
-      }
-      
-      
-    })
-    
-  })
-  
-  
-})
