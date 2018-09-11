@@ -60,20 +60,25 @@ arima_seasonal_function <- function(x) {
   stock_df$Adj=stock_df[,6]
   stock_df<-stock_df[,c(7,8,9,10,11,12)]
   
-  stockxts <- as.xts(stock_df)
   
-  train_stock <- stockxts["/2018-05-31"]
-  test_stock <- stockxts["2018-06-01/"]
+  train_stock <- stock_df[1:2117,]
+  test_stock <- stock_df[2118:2186,]
   
   #Prepare data for ARIMA seasonal model
-  stock_df$v7_MA<-ma(stock_df$Close, order=7)
-  station<-ts(na.omit(stock_df$v7_MA), frequency=30)
+  train_stock$v7_MA<-ma(train_stock$Close, order=7)
+  station<-ts(na.omit(train_stock$v7_MA), frequency=30)
   decomp<-stl(station, s.window="periodic")
   adjusted<-seasadj(decomp)
   
+  test_stock$v7_MA<-ma(test_stock$Close, order=7)
+  station1<-ts(na.omit(test_stock$v7_MA), frequency=30)
+  decomp1<-stl(station1, s.window="periodic")
+  adjusted1<-seasadj(decomp1)
+  
+  
   #Fit ARIMA seasonal model
-  model2<- auto.arima(train_stock$Close, ic="bic", seasonal=TRUE)
-  model2b <- Arima(test_stock$Close, model=model2, seasonal=TRUE)
+  model2<- auto.arima(adjusted, ic="bic", seasonal=TRUE)
+  model2b <- Arima(adjusted1, model=model2, seasonal=TRUE)
   forecast2<-forecast(model2b, h=5)
   
   m2 <- accuracy(model2)
