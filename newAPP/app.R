@@ -42,6 +42,9 @@ arima_function <- function(x) {
   m1 <- as.data.frame(m1)
   m1b <- as.data.frame(m1b)
   m1 <- rbind(m1, m1b)
+  rownames(m1)=c("Training set", "Test set")
+  Data_Set=c("Training set", "Test set")
+  m1=cbind(Data_Set,m1)
   
   GlobalData<<-m1 #storing m1 before returning
   return(plot(forecast1, main = paste("ARIMA Non-seasonal (next 5 days)",x), xlab = "Date", ylab = "Price"))
@@ -86,6 +89,9 @@ arima_seasonal_function <- function(x) {
   m2 <- as.data.frame(m2)
   m2b <- as.data.frame(m2b)
   m2 <- rbind(m2, m2b) 
+  rownames(m2)=c("Training set", "Test set")
+  Data_Set=c("Training set", "Test set")
+  m2=cbind(Data_Set,m2)
   
   GlobalData<<-m2
   return(plot(forecast2, main = paste("ARIMA Seasonal (next 5 days)",x), xlab = "Date", ylab = "Price"))
@@ -122,6 +128,8 @@ ETS_function <- function(x) {
   m3b <- as.data.frame(m3b)
   m3 <- colnames(c("Train", "Test"))
   m3 <- rbind(m3, m3b)
+  Data_Set=c("Training set", "Test set")
+  m3=cbind(Data_Set,m3)
   GlobalData<<-m3
   return(plot(forecast3, main = paste("ETS estimate for next 5 days",x), xlab = "Date", ylab = "Price"))
   
@@ -139,7 +147,7 @@ ui <- dashboardPage(
 fluidRow(
   column(width = 12),
   selectInput("forecast", "Pick your prediction model", c("ARIMA Non-seasonal","ARIMA Seasonal","Exponential Smoothing (ETS)"),"ARIMA Non-seasonal"),
-  selectInput("stockInput", "Pick your stock", c("AMZN","FB","GOOG","NVDA","AAPL"),"GOOG"),
+  selectInput("stockInput", "Pick your stock", c("AMZN","GE","GOOG","NVDA","AAPL"),"GOOG"),
   plotOutput("forecast_plots"),
   tableOutput("tablet")
     )
